@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styling (Claude theme ke liye) */
+body {
+  @apply bg-void text-text-primary font-body;
+}
