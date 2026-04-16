@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../store/authStore';
 import {
-  LayoutDashboard, Map, Trophy, Users, LogOut,
+  LayoutDashboard, Map, Trophy, Users, LogOut, Sparkles,
   Menu, X, Zap, User, Settings, ChevronDown,
   Crown, Flame,
 } from 'lucide-react';
@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { to: '/roadmap',     label: 'Roadmap',     icon: Map             },
   { to: '/leaderboard', label: 'Leaderboard', icon: Trophy          },
   { to: '/mentors',     label: 'Mentors',     icon: Users           },
+  { to: '/pathforge',   label: 'PathForge',   icon: Sparkles        },
 ];
 
 const LEVEL_NAMES = {

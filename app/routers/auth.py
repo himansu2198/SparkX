@@ -11,7 +11,7 @@ from sqlalchemy.exc import OperationalError
 from app.database import get_db
 from app.models.users import User
 from app.schemas.user import (
-    UserCreate, UserLogin, Token, UserOut,
+    UserCreate, UserLogin, Token, UserOut, UserUpdate,
     ForgotPasswordRequest, ResetPasswordRequest,
 )
 from app.services.auth_utils import create_access_token, get_current_user
@@ -66,7 +66,6 @@ def signup(
         db.refresh(user)
         logger.info("New user signed up: %s (id=%s)", user.email, user.id)
 
-        # ✅ Fire-and-forget — sends in background thread, returns IMMEDIATELY
         send_welcome_email(user.email, user.name)
 
         return user
@@ -116,15 +115,39 @@ def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+# ── PUT /auth/profile ─────────────────────────────────────────────────────────
+@router.put("/profile", response_model=UserOut)
+def update_profile(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        if payload.name is not None:
+            current_user.name = payload.name.strip()
+        if payload.college_name is not None:
+            current_user.college_name = payload.college_name.strip()
+
+        db.commit()
+        db.refresh(current_user)
+        logger.info("Profile updated for user %s", current_user.id)
+        return current_user
+
+    except OperationalError:
+        db.rollback()
+        raise HTTPException(status_code=503, detail="Database unavailable.")
+    except Exception as e:
+        db.rollback()
+        logger.error("Profile update error: %s", e)
+        raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
+
+
 # ── POST /auth/forgot-password ────────────────────────────────────────────────
 @router.post("/forgot-password", status_code=200)
 def forgot_password(
     payload: ForgotPasswordRequest,
     db: Session = Depends(get_db),
 ):
-    """
-    Always returns 200 even if email not found — prevents email enumeration.
-    """
     user = db.query(User).filter(User.email == payload.email).first()
 
     if user and user.is_active:
@@ -137,9 +160,7 @@ def forgot_password(
         )
         db.commit()
 
-        # ✅ Fire-and-forget — sends in background thread, returns IMMEDIATELY
         send_reset_password_email(user.email, user.name, raw_token)
-
         logger.info("Password reset requested for: %s", user.email)
 
     return {"message": "If this email is registered, a reset link has been sent."}

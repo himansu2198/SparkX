@@ -9,14 +9,14 @@ class Settings(BaseSettings):
     # JWT
     SECRET_KEY: str = "change-this-secret-key-in-production"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080  # 7 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 10080
 
     # App
     APP_NAME: str = "Gamified Learning Tracker"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
 
-    # Email (Gmail SMTP)
+    # Email
     MAIL_USERNAME:  str = ""
     MAIL_PASSWORD:  str = ""
     MAIL_FROM:      str = ""
@@ -24,8 +24,11 @@ class Settings(BaseSettings):
     MAIL_PORT:      int = 587
     MAIL_SERVER:    str = "smtp.gmail.com"
 
-    # Frontend URL (used in reset password links)
     FRONTEND_URL: str = "http://localhost:5173"
+
+    # ── AI Keys ───────────────────────────────────────────────────────
+    OPENAI_API_KEY: str = ""
+    GEMINI_API_KEY: str = ""        # ← ADD THIS
 
     class Config:
         env_file = ".env"

@@ -53,6 +53,16 @@ class UserOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+# ── User update ───────────────────────────────────────────────────────────────
+class UserUpdate(BaseModel):
+    name:         Optional[str] = Field(None, min_length=1, max_length=100)
+    college_name: Optional[str] = Field(None, max_length=200)
+
+    model_config = {"json_schema_extra": {"example": {
+        "name": "Rahul Sharma", "college_name": "IIT Bombay"
+    }}}
+
+
 # ── Leaderboard entry ─────────────────────────────────────────────────────────
 class LeaderboardEntry(BaseModel):
     rank:         int

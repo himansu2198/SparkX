@@ -3,7 +3,6 @@ from typing import Optional
 from datetime import datetime
 
 
-# ── Create feedback ───────────────────────────────────────────────────────────
 class FeedbackCreate(BaseModel):
     message: str = Field(..., min_length=10, max_length=1000)
     rating:  int = Field(..., ge=1, le=5)
@@ -14,12 +13,11 @@ class FeedbackCreate(BaseModel):
     }}}
 
 
-# ── Feedback response (public) ────────────────────────────────────────────────
 class FeedbackOut(BaseModel):
     id:         int
     message:    str
     rating:     int
-    user_name:  str
-    created_at: Optional[datetime]
+    user_name:  Optional[str] = "Anonymous"   # FIX: was non-optional str → crash if User.name is None
+    created_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}

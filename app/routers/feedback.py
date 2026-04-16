@@ -46,7 +46,6 @@ def create_feedback(
 
         logger.info("Feedback submitted by user %s (rating=%d)", current_user.email, payload.rating)
 
-        # ✅ Fire-and-forget — sends in background thread, returns IMMEDIATELY
         send_admin_feedback_email(
             current_user.name,
             current_user.email,
@@ -58,7 +57,7 @@ def create_feedback(
             id=feedback.id,
             message=feedback.message,
             rating=feedback.rating,
-            user_name=current_user.name,
+            user_name=current_user.name or "Anonymous",   # FIX: safe fallback
             created_at=feedback.created_at,
         )
 
@@ -73,42 +72,42 @@ def create_feedback(
         raise HTTPException(status_code=500, detail=f"Failed to submit feedback: {str(e)}")
 
 
-# ── GET /feedback — public top feedback (no auth needed) ──────────────────────
+# ── GET /feedback — public top feedback (no auth) ─────────────────────────────
 @router.get("/", response_model=List[FeedbackOut])
 def get_top_feedback(
     limit: int = Query(default=6, le=20),
     db: Session = Depends(get_db),
 ):
     try:
-        feedbacks = (
+        rows = (
             db.query(Feedback, User.name)
             .join(User, Feedback.user_id == User.id)
             .filter(Feedback.rating >= 4)
             .all()
         )
 
-        random.shuffle(feedbacks)
-        feedbacks = feedbacks[:limit]
+        random.shuffle(rows)
+        rows = rows[:limit]
 
-        result = []
-        for fb, user_name in feedbacks:
-            result.append(FeedbackOut(
+        return [
+            FeedbackOut(
                 id=fb.id,
                 message=fb.message,
                 rating=fb.rating,
-                user_name=user_name,
+                user_name=user_name or "Anonymous",   # FIX: safe fallback
                 created_at=fb.created_at,
-            ))
-        return result
+            )
+            for fb, user_name in rows
+        ]
 
     except OperationalError:
         raise HTTPException(status_code=503, detail="Database unavailable.")
     except Exception as e:
         logger.error("Get feedback error: %s", e)
-        raise HTTPException(status_code=500, detail="Failed to load feedback.")
+        raise HTTPException(status_code=500, detail=f"Failed to load feedback: {str(e)}")
 
 
-# ── GET /feedback/all — all feedback with pagination ──────────────────────────
+# ── GET /feedback/all — paginated (no auth) ───────────────────────────────────
 @router.get("/all", response_model=List[FeedbackOut])
 def get_all_feedback(
     limit: int = Query(default=50, le=100),
@@ -116,7 +115,7 @@ def get_all_feedback(
     db: Session = Depends(get_db),
 ):
     try:
-        feedbacks = (
+        rows = (
             db.query(Feedback, User.name)
             .join(User, Feedback.user_id == User.id)
             .filter(Feedback.rating >= 4)
@@ -126,19 +125,19 @@ def get_all_feedback(
             .all()
         )
 
-        result = []
-        for fb, user_name in feedbacks:
-            result.append(FeedbackOut(
+        return [
+            FeedbackOut(
                 id=fb.id,
                 message=fb.message,
                 rating=fb.rating,
-                user_name=user_name,
+                user_name=user_name or "Anonymous",   # FIX: safe fallback
                 created_at=fb.created_at,
-            ))
-        return result
+            )
+            for fb, user_name in rows
+        ]
 
     except OperationalError:
         raise HTTPException(status_code=503, detail="Database unavailable.")
     except Exception as e:
         logger.error("Get all feedback error: %s", e)
-        raise HTTPException(status_code=500, detail="Failed to load feedback.")
+        raise HTTPException(status_code=500, detail=f"Failed to load feedback: {str(e)}")

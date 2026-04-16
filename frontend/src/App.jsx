@@ -12,6 +12,7 @@ import ProfilePage from './pages/ProfilePage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AllFeedbackPage from './pages/AllFeedbackPage';
+import PathForgePage from './pages/PathForgePage';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -37,6 +38,7 @@ function AppRoutes() {
         <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
         <Route path="/mentors"     element={<ProtectedRoute><MentorsPage /></ProtectedRoute>} />
         <Route path="/profile"     element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/pathforge"   element={<ProtectedRoute><PathForgePage /></ProtectedRoute>} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password"  element={<ResetPasswordPage />} />
         <Route path="/feedback"        element={<AllFeedbackPage />} />
