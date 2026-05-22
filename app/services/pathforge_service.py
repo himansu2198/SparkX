@@ -20,7 +20,7 @@ else:
 
 # ── Model name — use gemini-1.5-flash (most stable free-tier model) ───────────
 # If you have Gemini 2.0 access, you can try "gemini-2.0-flash-exp" instead
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 
 SYSTEM_PROMPT = """You are PathForge — an expert learning path architect used by top engineers and students worldwide.
 
@@ -315,7 +315,7 @@ def generate_roadmap_sync(goal: str, user_level: str = "beginner") -> dict:
         if "not found" in err_msg.lower() or "404" in err_msg:
             raise ValueError(
                 f"Model '{GEMINI_MODEL}' not found. "
-                "Try changing GEMINI_MODEL to 'gemini-1.5-flash' in pathforge_service.py"
+                "Try changing GEMINI_MODEL to 'gemini-2.5-flash' in pathforge_service.py"
             )
 
         raise ValueError(
