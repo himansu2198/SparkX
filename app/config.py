@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql://sparkx_user:XYvgHQNHmTvwML98WyJpn1Swj1CamQXh@dpg-d889n8ugvqtc73ejcui0-a/gamified_learning"
+    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/gamified_learning"
 
     # JWT
     SECRET_KEY: str = "change-this-secret-key-in-production"

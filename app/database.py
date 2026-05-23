@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 engine = create_engine(
     URL.create(
         drivername="postgresql",
-        username="postgres",
-        password="himansu@2004",
-        host="localhost",
-        port=5433,
+        username="sparkx_user",
+        password="XYvgHQNHmTvwML98WyJpn1Swj1CamQXh",
+        host="dpg-d889n8ugvqtc73ejcui0-a",
+        port=5432,
         database="gamified_learning",
     ),
     pool_pre_ping=True,
