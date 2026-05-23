@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    # Hardcoded port 8000 (do not rely on environment variable)
+    # Hardcoded port 8000 (do not rely on en  vironment variable)
     port = 8000
     host = "0.0.0.0"
     logger.info("Starting uvicorn on %s:%s (hardcoded)", host, port)
