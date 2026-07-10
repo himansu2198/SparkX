@@ -8,8 +8,8 @@ sqlalchemy>=2.0.41,<2.1
 alembic==1.13.1
 
 # ── Validation & Settings ─────────────────────────────────────────────────────
-# pydantic==2.6.4
-# pydantic-settings==2.2.1
+pydantic>=2.6.4
+pydantic-settings>=2.2.1
 
 # ── Authentication ────────────────────────────────────────────────────────────
 python-jose[cryptography]==3.3.0
