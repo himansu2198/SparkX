@@ -282,7 +282,7 @@ Developed by **Himansu Sekhar B.**
 
 This project is not just a college project —
 it is a **product-level platform** focused on solving real student problems using gamification and AI.
-
+python run.py for backend
 👉 If you like this project, consider giving it a ⭐ on GitHub!
 
 ---
