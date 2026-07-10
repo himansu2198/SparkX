@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+export const BASE_URL = import.meta.env.VITE_API_URL || 'https://sparkx-backend.onrender.com';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -27,7 +27,7 @@ api.interceptors.response.use(
       if (err.code === 'ECONNABORTED') {
         err.userMessage = 'Request timed out. Backend may be down or DB is unreachable.';
       } else {
-        err.userMessage = 'Cannot connect to server. Is FastAPI running on port 8000?';
+        err.userMessage = 'Cannot connect to server. The backend may be down or starting up (Render free tier sleeps after inactivity — please wait a moment and retry).';
       }
       return Promise.reject(err);
     }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { BASE_URL } from '../api';
 
 export default function FeedbackModal({ isOpen, onClose }) {
   const [rating, setRating]     = useState(0);
@@ -21,7 +22,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/feedback/`,
+        `${BASE_URL}/feedback/`,
         {
           method: 'POST',
           headers: {

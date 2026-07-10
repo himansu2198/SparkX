@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Star, MessageSquare, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../api';
 
 function FeedbackCard({ feedback, index }) {
   const [expanded, setExpanded] = useState(false);
@@ -76,7 +77,7 @@ export default function AllFeedbackPage() {
     const fetchAll = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/feedback/all?limit=50`
+          `${BASE_URL}/feedback/all?limit=50`
         );
         if (res.ok) {
           const data = await res.json();

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../store/authStore';
-import { leaderboardAPI } from '../api';
+import { leaderboardAPI, BASE_URL } from '../api';
 import { Trophy, Zap, Flame, Users, Star, Crown, Building2, Layers } from 'lucide-react';
 
 const LEVEL_NAMES = {
@@ -302,7 +302,7 @@ export default function LeaderboardPage() {
     // Use the unified endpoint with type param
     const token = localStorage.getItem('token');
     fetch(
-      `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/leaderboard/?type=${tab}&limit=50`,
+      `${BASE_URL}/leaderboard/?type=${tab}&limit=50`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

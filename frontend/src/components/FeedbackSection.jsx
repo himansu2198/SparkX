@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../api';
 import { motion } from 'framer-motion';
 import { Star, ArrowRight, MessageSquare } from 'lucide-react';
 
@@ -73,7 +74,7 @@ export default function FeedbackSection() {
     const fetchFeedback = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/feedback/?limit=6`
+          `${BASE_URL}/feedback/?limit=6`
         );
         if (res.ok) {
           const data = await res.json();

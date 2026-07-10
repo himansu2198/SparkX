@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/gamified_learning"
+    DATABASE_URL: str = ""  # Must be set via .env (DATABASE_URL=postgresql://...)
 
     # JWT
     SECRET_KEY: str = "change-this-secret-key-in-production"
@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     MAIL_PORT:      int = 587
     MAIL_SERVER:    str = "smtp.gmail.com"
 
-    FRONTEND_URL: str = "http://localhost:5173"
+    FRONTEND_URL: str = "https://spark-x-ih6d-snowy.vercel.app"
 
     # ── AI Keys ───────────────────────────────────────────────────────
     OPENAI_API_KEY: str = ""
