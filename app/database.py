@@ -8,26 +8,50 @@ import logging
 logger = logging.getLogger(__name__)
 
 # ── Engine — uses URL.create to safely handle special chars in password ────────
-engine = create_engine(
-    URL.create(
-        drivername="postgresql",
-        username="sparkx_user",
-        password="XYvgHQNHmTvwML98WyJpn1Swj1CamQXh",
-        host="dpg-d889n8ugvqtc73ejcui0-a",
-        port=5432,
-        database="gamified_learning",
-    ),
-    pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
-    pool_timeout=10,
-    pool_recycle=1800,
-    connect_args={
-        "connect_timeout": 5,
-        "options": "-c statement_timeout=30000",
-    },
-    echo=False,
-)
+import os
+from app.config import settings
+
+# Use environment variable (Render) if available, otherwise fallback to local configuration
+db_url = os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+
+# Check if it looks like a production/configured database URL, otherwise use local fallback
+if db_url and not db_url.startswith("postgresql://postgres:password@localhost:5432"):
+    # SQLAlchemy 1.4+ / 2.0 requires prefix to start with postgresql:// not postgres://
+    # Render sometimes provides postgres:// which breaks SQLAlchemy. Let's fix that.
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    engine = create_engine(
+        db_url,
+        pool_pre_ping=True,
+        pool_size=5,
+        max_overflow=10,
+        pool_timeout=10,
+        pool_recycle=1800,
+        connect_args={
+            "connect_timeout": 5,
+        }
+    )
+else:
+    engine = create_engine(
+        URL.create(
+            drivername="postgresql",
+            username="postgres",
+            password="himansu@2004",
+            host="localhost",
+            port=5433,
+            database="gamified_learning",
+        ),
+        pool_pre_ping=True,
+        pool_size=5,
+        max_overflow=10,
+        pool_timeout=10,
+        pool_recycle=1800,
+        connect_args={
+            "connect_timeout": 5,
+            "options": "-c statement_timeout=30000",
+        },
+        echo=False,
+    )
 
 # ── Verify DB is reachable at startup ─────────────────────────────────────────
 def verify_db_connection():

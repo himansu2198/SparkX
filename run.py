@@ -13,10 +13,11 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    # Hardcoded port 8000 (do not rely on en  vironment variable)
-    port = 8000
-    host = "0.0.0.0"
-    logger.info("Starting uvicorn on %s:%s (hardcoded)", host, port)
+    import os
+    # Default to 8000 locally, but use PORT from environment on Render
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "0.0.0.0")
+    logger.info("Starting uvicorn on %s:%s", host, port)
     run("app.main:app", host=host, port=port)
 
 
