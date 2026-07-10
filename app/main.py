@@ -37,16 +37,22 @@ app.add_middleware(
 async def startup_event():
     from app.database import engine, Base
 
-    # 🔥 IMPORTANT: all models import karo
+    # Import all models so SQLAlchemy knows about all tables
     from app.models import users, tasks, levels, progress, feedback, mentors, pathforge
-    # 🔥 auto create missing tables
-    Base.metadata.create_all(bind=engine)
 
     logger.info("🚀 Starting up...")
 
+    try:
+        # Auto-create missing tables
+        Base.metadata.create_all(bind=engine)
+        logger.info("✅ Tables created/verified")
+    except Exception as e:
+        logger.error("❌ create_all failed: %s", e)
+        logger.error("👉 Make sure DATABASE_URL is set correctly in Render environment variables")
+
     ok = verify_db_connection()
     if not ok:
-        logger.error("❌ DB unreachable — check DATABASE_URL in .env")
+        logger.error("❌ DB unreachable — set DATABASE_URL in Render Environment Variables")
     else:
         logger.info("✅ DB connected — backend ready")
 
